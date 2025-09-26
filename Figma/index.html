@@ -10,46 +10,80 @@
 </head>
 <body class="bg-light">
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-success">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Plataforma Coworking</a>
-      <div id="logoutBtn" class="d-none">
-        <button class="btn btn-outline-light" onclick="logout()">Sair</button>
-      </div>
-    </div>
-  </nav>
+  <!-- Skip link -->
+  <a class="skip-link" href="#main" tabindex="0">Pular para o conteúdo</a>
 
-  <div class="container py-4" id="app">
+  <!-- Status area (aria-live) -->
+  <div id="status" class="visually-hidden" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#1b6d3b;" role="navigation" aria-label="Menu principal">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#" id="brand">Plataforma Coworking</a>
+        <div id="logoutBtn" class="d-none">
+          <button class="btn btn-outline-light" onclick="logout()">Sair</button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main" class="container py-4" role="main">
     <!-- Tela de Login -->
-    <div class="login-container" id="loginScreen">
-      <h2 class="text-center">Login</h2>
-      <input type="text" id="loginEmail" class="form-control mb-2" placeholder="E-mail">
-      <input type="password" id="loginPassword" class="form-control mb-2" placeholder="Senha">
-      <button class="btn btn-success w-100" onclick="login()">Entrar</button>
-      <p class="text-center mt-2">Não tem conta? <a href="#" onclick="showRegister()">Cadastre-se</a></p>
-    </div>
+    <section class="login-container" id="loginScreen" aria-labelledby="loginTitle">
+      <h2 id="loginTitle" class="text-center">Login</h2>
+      <form id="loginForm" onsubmit="event.preventDefault(); login();" novalidate>
+        <div class="mb-2">
+          <label for="loginEmail" class="form-label">E-mail</label>
+          <input type="email" id="loginEmail" class="form-control" placeholder="E-mail" autocomplete="email" required aria-required="true" />
+          <div id="loginEmail-error" class="field-error" aria-live="polite"></div>
+        </div>
+        <div class="mb-2">
+          <label for="loginPassword" class="form-label">Senha</label>
+          <input type="password" id="loginPassword" class="form-control" placeholder="Senha" autocomplete="current-password" required aria-required="true" />
+          <div id="loginPassword-error" class="field-error" aria-live="polite"></div>
+        </div>
+        <button type="submit" class="btn btn-success w-100">Entrar</button>
+      </form>
+      <p class="text-center mt-2">Não tem conta? <a href="#" onclick="showRegister(); return false;">Cadastre-se</a></p>
+    </section>
 
     <!-- Tela de Cadastro -->
-    <div class="register-container d-none" id="registerScreen">
-      <h2 class="text-center">Cadastro</h2>
-      <input type="text" id="registerName" class="form-control mb-2" placeholder="Nome">
-      <input type="email" id="registerEmail" class="form-control mb-2" placeholder="E-mail">
-      <input type="password" id="registerPassword" class="form-control mb-2" placeholder="Senha">
-      <button class="btn btn-primary w-100" onclick="register()">Cadastrar</button>
-      <p class="text-center mt-2">Já tem conta? <a href="#" onclick="showLogin()">Faça login</a></p>
-    </div>
+    <section class="register-container d-none" id="registerScreen" aria-labelledby="registerTitle">
+      <h2 id="registerTitle" class="text-center">Cadastro</h2>
+      <form id="registerForm" onsubmit="event.preventDefault(); register();" novalidate>
+        <div class="mb-2">
+          <label for="registerName" class="form-label">Nome</label>
+          <input type="text" id="registerName" class="form-control" placeholder="Nome" autocomplete="name" required aria-required="true" />
+          <div id="registerName-error" class="field-error" aria-live="polite"></div>
+        </div>
+        <div class="mb-2">
+          <label for="registerEmail" class="form-label">E-mail</label>
+          <input type="email" id="registerEmail" class="form-control" placeholder="E-mail" autocomplete="email" required aria-required="true" />
+          <div id="registerEmail-error" class="field-error" aria-live="polite"></div>
+        </div>
+        <div class="mb-2">
+          <label for="registerPassword" class="form-label">Senha</label>
+          <input type="password" id="registerPassword" class="form-control" placeholder="Senha" autocomplete="new-password" required aria-required="true" />
+          <div id="registerPassword-error" class="field-error" aria-live="polite"></div>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
+      </form>
+      <p class="text-center mt-2">Já tem conta? <a href="#" onclick="showLogin(); return false;">Faça login</a></p>
+    </section>
 
     <!-- Tela Principal -->
-    <div id="mainScreen" class="d-none">
-      <h2 class="mb-3">Espaços Disponíveis</h2>
+    <section id="mainScreen" class="d-none" aria-labelledby="spacesTitle">
+      <h2 id="spacesTitle" class="mb-3">Espaços Disponíveis</h2>
 
       <!-- Filtros -->
       <div class="row mb-3">
         <div class="col-md-6">
-          <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar espaço..." onkeyup="loadCards()">
+          <label for="searchInput" class="form-label visually-hidden">Pesquisar</label>
+          <input type="search" id="searchInput" class="form-control" placeholder="Pesquisar espaço..." onkeyup="loadCards()" />
         </div>
         <div class="col-md-6">
+          <label for="sortSelect" class="form-label visually-hidden">Ordenar</label>
           <select id="sortSelect" class="form-select" onchange="loadCards()">
             <option value="none">Ordenar por...</option>
             <option value="priceAsc">Preço: Menor para Maior</option>
@@ -58,76 +92,102 @@
         </div>
       </div>
 
-      <div class="row" id="cardsContainer"></div>
-    </div>
-  </div>
+      <div class="row" id="cardsContainer" tabindex="0" aria-live="polite" aria-relevant="additions"></div>
+    </section>
+  </main>
 
-  <!-- Modal de Pagamento -->
-  <div class="modal fade" id="paymentModal" tabindex="-1">
+  <!-- Modal de Pagamento (Bootstrap) -->
+  <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentTitle" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
+      <div class="modal-content" role="dialog" aria-modal="true">
         <div class="modal-header">
-          <h5 class="modal-title">Pagamento</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <h5 class="modal-title" id="paymentTitle">Pagamento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
         </div>
         <div class="modal-body">
-          <p id="spaceInfo"></p>
-          <label for="paymentMethod">Forma de pagamento:</label>
-          <select id="paymentMethod" class="form-select mb-2" onchange="togglePaymentFields()">
+          <p id="spaceInfo" class="mb-2"></p>
+
+          <label for="paymentMethod" class="form-label">Forma de pagamento:</label>
+          <select id="paymentMethod" class="form-select mb-2" onchange="togglePaymentFields()" aria-describedby="paymentHelp">
             <option value="credit">Cartão de Crédito</option>
             <option value="debit">Cartão de Débito</option>
             <option value="pix">PIX</option>
             <option value="boleto">Boleto</option>
           </select>
 
+          <div id="paymentHelp" class="form-text mb-2">Escolha a forma de pagamento.</div>
+
           <!-- Campos de cartão -->
-          <div id="cardFields">
-            <input type="text" id="cardNumber" class="form-control mb-2" placeholder="Número do cartão">
-            <input type="text" id="cardName" class="form-control mb-2" placeholder="Nome no cartão">
-            <input type="text" id="cardExpiry" class="form-control mb-2" placeholder="MM/AA">
-            <input type="text" id="cardCVV" class="form-control mb-2" placeholder="CVV">
+          <div id="cardFields" class="mb-2">
+            <div class="mb-2">
+              <label for="cardNumber" class="form-label">Número do cartão</label>
+              <input type="text" id="cardNumber" class="form-control" inputmode="numeric" autocomplete="cc-number" />
+              <div id="cardNumber-error" class="field-error" aria-live="polite"></div>
+            </div>
+            <div class="mb-2">
+              <label for="cardName" class="form-label">Nome no cartão</label>
+              <input type="text" id="cardName" class="form-control" autocomplete="cc-name" />
+              <div id="cardName-error" class="field-error" aria-live="polite"></div>
+            </div>
+            <div class="row">
+              <div class="col-6 mb-2">
+                <label for="cardExpiry" class="form-label">MM/AA</label>
+                <input type="text" id="cardExpiry" class="form-control" inputmode="numeric" placeholder="MM/AA" />
+                <div id="cardExpiry-error" class="field-error" aria-live="polite"></div>
+              </div>
+              <div class="col-6 mb-2">
+                <label for="cardCVV" class="form-label">CVV</label>
+                <input type="password" id="cardCVV" class="form-control" inputmode="numeric" autocomplete="cc-csc" />
+                <div id="cardCVV-error" class="field-error" aria-live="polite"></div>
+              </div>
+            </div>
           </div>
 
           <!-- PIX -->
-          <div id="pixFields" class="text-center d-none">
+          <div id="pixFields" class="text-center d-none mb-2" aria-hidden="true">
             <p>Escaneie o QR Code:</p>
-            <img src="assets/qrcode.png" alt="PIX QR Code" class="img-fluid">
-
+            <img src="assets/qrcode.png" alt="PIX QR Code para pagamento" class="img-fluid mx-auto">
           </div>
+
           <!-- Boleto -->
-          <div id="boletoFields" class="text-center d-none">
+          <div id="boletoFields" class="text-center d-none mb-2" aria-hidden="true">
             <p>Use o código de barras:</p>
-            <img src="assets/codebar.jpg" alt="Boleto" class="img-fluid">
+            <img src="assets/codebar.jpg" alt="Imagem do código de barras do boleto" class="img-fluid mx-auto">
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-success" onclick="confirmPayment()">Confirmar Pagamento</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success" onclick="confirmPayment()">Confirmar Pagamento</button>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Modal de Avaliação -->
-  <div class="modal fade" id="reviewModal" tabindex="-1">
+  <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewTitle" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
+      <div class="modal-content" role="dialog" aria-modal="true">
         <div class="modal-header">
-          <h5 class="modal-title">Deixe sua avaliação</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <h5 class="modal-title" id="reviewTitle">Deixe sua avaliação</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
         </div>
         <div class="modal-body">
           <p id="reviewSpaceInfo"></p>
-          <div class="mb-2">
-            <span class="stars" onclick="rateReview(this)">★</span>
-            <span class="stars" onclick="rateReview(this)">★</span>
-            <span class="stars" onclick="rateReview(this)">★</span>
-            <span class="stars" onclick="rateReview(this)">★</span>
-            <span class="stars" onclick="rateReview(this)">★</span>
+          <div class="mb-2" role="radiogroup" aria-label="Classificação por estrelas" id="starGroup">
+            <button class="star" data-value="1" type="button" aria-label="1 estrela" title="1 estrela">☆</button>
+            <button class="star" data-value="2" type="button" aria-label="2 estrelas" title="2 estrelas">☆</button>
+            <button class="star" data-value="3" type="button" aria-label="3 estrelas" title="3 estrelas">☆</button>
+            <button class="star" data-value="4" type="button" aria-label="4 estrelas" title="4 estrelas">☆</button>
+            <button class="star" data-value="5" type="button" aria-label="5 estrelas" title="5 estrelas">☆</button>
           </div>
-          <textarea id="reviewComment" class="form-control" placeholder="Escreva sua crítica"></textarea>
+          <div class="mb-2">
+            <label for="reviewComment" class="form-label visually-hidden">Comentário</label>
+            <textarea id="reviewComment" class="form-control" placeholder="Escreva sua crítica" rows="4"></textarea>
+            <div id="reviewComment-error" class="field-error" aria-live="polite"></div>
+          </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-primary" onclick="submitReview()">Enviar Avaliação</button>
+          <button type="button" class="btn btn-primary" onclick="submitReview()">Enviar Avaliação</button>
         </div>
       </div>
     </div>

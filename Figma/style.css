@@ -1,15 +1,84 @@
-.stars {
-  color: gold;
+:root{
+  --bg: #ffffff;
+  --text: #0b1220;
+  --primary: #1b6d3b; /* verde compatível com navbar */
+  --primary-contrast: #ffffff;
+  --error: #b00020;
+  --focus-outline: 3px solid #ffb400;
+}
+
+/* Skip link */
+.skip-link{
+  position: absolute;
+  left: -999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  z-index: 10000;
+}
+.skip-link:focus, .skip-link:active{
+  left: 10px;
+  top: 10px;
+  width: auto;
+  height: auto;
+  padding: 8px 12px;
+  background: var(--primary);
+  color: var(--primary-contrast);
+  border-radius: 4px;
+}
+
+/* Visually-hidden utility */
+.visually-hidden{
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px,1px,1px,1px);
+  white-space: nowrap;
+}
+
+/* Field error */
+.field-error {
+  color: var(--error);
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+/* Focus visible */
+:focus {
+  outline: none;
+}
+:focus-visible, button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: 2px;
+}
+
+/* Stars */
+.star {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  margin-right: 0.25rem;
   cursor: pointer;
-  font-size: 24px;
+}
+.star:focus { transform: translateY(-1px); }
+
+/* Card image alt sizing */
+.card-img-top {
+  object-fit: cover;
+  height: 180px;
 }
 
-#pixFields img {
-  max-width: 180px;
+/* PIX/Boleto images */
+#pixFields img, #boletoFields img {
+  max-width: 220px;
   height: auto;
 }
 
-#boletoFields img {
-  max-width: 280px;
-  height: auto;
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
 }
+
+/* small tweaks */
+body { color: var(--text); background: #f8f9fa; }

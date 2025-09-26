@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma Coworking</title>
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-light">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Plataforma Coworking</a>
+      <div id="logoutBtn" class="d-none">
+        <button class="btn btn-outline-light" onclick="logout()">Sair</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-4" id="app">
+    <!-- Tela de Login -->
+    <div class="login-container" id="loginScreen">
+      <h2 class="text-center">Login</h2>
+      <input type="text" id="loginEmail" class="form-control mb-2" placeholder="E-mail">
+      <input type="password" id="loginPassword" class="form-control mb-2" placeholder="Senha">
+      <button class="btn btn-success w-100" onclick="login()">Entrar</button>
+      <p class="text-center mt-2">Não tem conta? <a href="#" onclick="showRegister()">Cadastre-se</a></p>
+    </div>
+
+    <!-- Tela de Cadastro -->
+    <div class="register-container d-none" id="registerScreen">
+      <h2 class="text-center">Cadastro</h2>
+      <input type="text" id="registerName" class="form-control mb-2" placeholder="Nome">
+      <input type="email" id="registerEmail" class="form-control mb-2" placeholder="E-mail">
+      <input type="password" id="registerPassword" class="form-control mb-2" placeholder="Senha">
+      <button class="btn btn-primary w-100" onclick="register()">Cadastrar</button>
+      <p class="text-center mt-2">Já tem conta? <a href="#" onclick="showLogin()">Faça login</a></p>
+    </div>
+
+    <!-- Tela Principal -->
+    <div id="mainScreen" class="d-none">
+      <h2 class="mb-3">Espaços Disponíveis</h2>
+
+      <!-- Filtros -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar espaço..." onkeyup="loadCards()">
+        </div>
+        <div class="col-md-6">
+          <select id="sortSelect" class="form-select" onchange="loadCards()">
+            <option value="none">Ordenar por...</option>
+            <option value="priceAsc">Preço: Menor para Maior</option>
+            <option value="priceDesc">Preço: Maior para Menor</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row" id="cardsContainer"></div>
+    </div>
+  </div>
+
+  <!-- Modal de Pagamento -->
+  <div class="modal fade" id="paymentModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Pagamento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p id="spaceInfo"></p>
+          <label for="paymentMethod">Forma de pagamento:</label>
+          <select id="paymentMethod" class="form-select mb-2" onchange="togglePaymentFields()">
+            <option value="credit">Cartão de Crédito</option>
+            <option value="debit">Cartão de Débito</option>
+            <option value="pix">PIX</option>
+            <option value="boleto">Boleto</option>
+          </select>
+
+          <!-- Campos de cartão -->
+          <div id="cardFields">
+            <input type="text" id="cardNumber" class="form-control mb-2" placeholder="Número do cartão">
+            <input type="text" id="cardName" class="form-control mb-2" placeholder="Nome no cartão">
+            <input type="text" id="cardExpiry" class="form-control mb-2" placeholder="MM/AA">
+            <input type="text" id="cardCVV" class="form-control mb-2" placeholder="CVV">
+          </div>
+
+          <!-- PIX -->
+          <div id="pixFields" class="text-center d-none">
+            <p>Escaneie o QR Code:</p>
+            <img src="assets/qrcode.png" alt="PIX QR Code" class="img-fluid">
+
+          </div>
+          <!-- Boleto -->
+          <div id="boletoFields" class="text-center d-none">
+            <p>Use o código de barras:</p>
+            <img src="assets/codebar.jpg" alt="Boleto" class="img-fluid">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success" onclick="confirmPayment()">Confirmar Pagamento</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Avaliação -->
+  <div class="modal fade" id="reviewModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Deixe sua avaliação</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p id="reviewSpaceInfo"></p>
+          <div class="mb-2">
+            <span class="stars" onclick="rateReview(this)">★</span>
+            <span class="stars" onclick="rateReview(this)">★</span>
+            <span class="stars" onclick="rateReview(this)">★</span>
+            <span class="stars" onclick="rateReview(this)">★</span>
+            <span class="stars" onclick="rateReview(this)">★</span>
+          </div>
+          <textarea id="reviewComment" class="form-control" placeholder="Escreva sua crítica"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" onclick="submitReview()">Enviar Avaliação</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
